@@ -1,3 +1,10 @@
+<?php
+
+if(!isset($_GET['error'])) $error = "";
+else $error = $_GET['error'];
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 

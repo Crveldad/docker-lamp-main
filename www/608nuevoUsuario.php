@@ -1,12 +1,11 @@
 <?php
 include_once "conexion.php";
 
-
 $conexion = null;
 
 if (!isset($_POST["enviar"])) {
-    die("Error de envío.");
-    header("Location: 608registro.php");
+    $error = "Error de envío.";
+    header("Location: 608registro.php?error=$error");
 }
 
 try {
@@ -16,7 +15,7 @@ try {
     $email = $_POST['email'];
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        echo ("No es un email válido");
+        throw new Exception("No es un email válido");
         header("Location: 608registro.php");
     } else {
 
@@ -34,8 +33,11 @@ try {
         $sentencia->bindParam(":email", $email);
 
         $isOk = $sentencia->execute([
+            //al ser null la id, no hace falta ponerla
+            "nombre" => $nombre,
             "usuario" => $usuario,
-            "password" => password_hash($password, PASSWORD_DEFAULT)
+            "password" => password_hash($password, PASSWORD_DEFAULT),
+            "email" => $email
         ]);
 
         $idGenerado = $conexion->lastInsertId();
